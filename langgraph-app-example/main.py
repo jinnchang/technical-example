@@ -7,7 +7,7 @@
    tools 执行完再回到 model，形成「思考 → 调工具 → 再看结果」的循环；
 3. MemorySaver 检查点 + thread_id：跨轮次记忆与断点恢复。
 
-运行前需设置环境变量 OPENAI_API_KEY、OPENAI_MODEL（可选 OPENAI_BASE_URL）。
+运行前需设置环境变量 OPENAI_API_KEY、OPENAI_MODEL、OPENAI_BASE_URL。
 """
 
 import os
@@ -75,19 +75,23 @@ def tool_node(state):
 
 def build_agent():
     """用 StateGraph 手写 ReAct 图：model 与 tools 两个节点循环，直到 model 不再调工具。"""
-    if not os.environ.get("OPENAI_API_KEY") or not os.environ.get("OPENAI_MODEL"):
+    if (
+        not os.environ.get("OPENAI_API_KEY")
+        or not os.environ.get("OPENAI_MODEL")
+        or not os.environ.get("OPENAI_BASE_URL")
+    ):
         raise SystemExit(
-            "缺少必要的环境变量（OPENAI_API_KEY / OPENAI_MODEL），无法调用 LLM。请设置后重试：\n"
+            "缺少必要的环境变量（OPENAI_API_KEY / OPENAI_MODEL / OPENAI_BASE_URL），无法调用 LLM。请设置后重试：\n"
             "  export OPENAI_API_KEY=<你的密钥>\n"
             "  export OPENAI_MODEL=<模型名>\n"
-            "  export OPENAI_BASE_URL=<OpenAI 兼容端点，可选>\n"
+            "  export OPENAI_BASE_URL=<OpenAI 兼容端点>\n"
             "说明：任何 OpenAI 兼容的 LLM（OpenAI / DeepSeek / Kimi / GLM / Qwen …）都能用。"
         )
 
     model = ChatOpenAI(
         model=os.environ["OPENAI_MODEL"],
         api_key=os.environ["OPENAI_API_KEY"],
-        base_url=os.environ.get("OPENAI_BASE_URL") or None,
+        base_url=os.environ["OPENAI_BASE_URL"],
     )
     model_with_tools = model.bind_tools(TOOLS)  # 绑定工具：模型会返回带 tool_calls 的 AIMessage
 

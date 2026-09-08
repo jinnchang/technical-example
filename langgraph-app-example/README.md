@@ -15,7 +15,7 @@
 2. **节点与边（Node / Edge）**：两个节点 `model`（调 LLM）和 `tools`（执行工具），条件边根据「上一条 AI 消息是否含 `tool_calls`」决定回 `tools` 还是结束；
 3. **检查点（Checkpoint）**：`MemorySaver` + `thread_id`，跨轮次记忆与断点恢复。
 
-模型层用 LangChain 的 `ChatOpenAI`，任何 OpenAI 兼容的 LLM 都能直接替换（OpenAI / DeepSeek / 火山方舟 / Kimi / GLM / Qwen 等），不动图本身。
+模型层用 LangChain 的 `ChatOpenAI`，任何 OpenAI 兼容的 LLM 都能直接替换（OpenAI / DeepSeek / Kimi / GLM / Qwen 等），不动图本身。
 
 ## 安装
 
@@ -31,17 +31,16 @@ pip install langgraph langchain-openai grandalf
 
 ```bash
 export OPENAI_API_KEY=<你的密钥>
-export OPENAI_MODEL=deepseek-v4-pro
-# 使用 OpenAI 官方无需下面一行；使用火山方舟等兼容端点时设置：
-export OPENAI_BASE_URL=https://ark.cn-beijing.volces.com/api/coding/v3
+export OPENAI_MODEL=<模型名>
+export OPENAI_BASE_URL=<OpenAI 兼容端点>
 ```
 
-缺少 `OPENAI_API_KEY` 或 `OPENAI_MODEL` 时，程序会在启动时给出清晰的错误提示并退出。
+缺少 `OPENAI_API_KEY`、`OPENAI_MODEL` 或 `OPENAI_BASE_URL` 中任意一个时，程序会在启动时给出清晰的错误提示并退出。
 
 2. 运行：
 
 ```bash
-python main.py
+.venv/bin/python main.py # 虚拟环境中运行
 ```
 
 3. 观察输出：程序先打印你亲手搭的图 `__start__ → model → tools(可选) → model → __end__`；第一轮模型并行调用 `get_weather` 和 `multiply` 两个工具后作答；第二轮仅凭 `thread_id` 记忆回忆上一轮算出的 2146，算出 214600。
