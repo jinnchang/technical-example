@@ -18,11 +18,17 @@
 
 ## 安装
 
+> 本仓库所有示例共用**仓库根目录**的统一环境。
+
+在**仓库根目录**创建并安装（本示例只需 `langchain`、`langchain-openai`）：
+
 ```bash
-python3 -m venv .venv
+python3 -m venv .venv        # 若已存在则跳过
 source .venv/bin/activate
 pip install langchain langchain-openai
 ```
+
+根目录 `.venv` 已存在时可直接跳到「运行」。
 
 ## 运行
 
@@ -39,7 +45,7 @@ export OPENAI_BASE_URL=<OpenAI 兼容端点>
 2. 运行：
 
 ```bash
-.venv/bin/python main.py
+../.venv/bin/python main.py   # 从示例目录运行，使用仓库根目录的统一 venv
 ```
 
 3. 观察输出：程序依次演示三种调用——`invoke` 分析单条短评并打印类型化对象、`batch` 批量分析三条短评、`stream` 逐 token 流式打印长文本。

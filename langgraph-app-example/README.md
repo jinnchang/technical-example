@@ -19,11 +19,17 @@
 
 ## 安装
 
+> 本仓库所有示例共用**仓库根目录**的统一环境。
+
+在**仓库根目录**创建并安装（本示例只需 `langgraph`、`langchain-openai`、`grandalf`）：
+
 ```bash
-python3 -m venv .venv
+python3 -m venv .venv        # 若已存在则跳过
 source .venv/bin/activate
 pip install langgraph langchain-openai grandalf
 ```
+
+根目录 `.venv` 已存在时可直接跳到「运行」。
 
 ## 运行
 
@@ -40,7 +46,7 @@ export OPENAI_BASE_URL=<OpenAI 兼容端点>
 2. 运行：
 
 ```bash
-.venv/bin/python main.py # 虚拟环境中运行
+../.venv/bin/python main.py   # 从示例目录运行，使用仓库根目录的统一 venv
 ```
 
 3. 观察输出：程序先打印你亲手搭的图 `__start__ → model → tools(可选) → model → __end__`；第一轮模型并行调用 `get_weather` 和 `multiply` 两个工具后作答；第二轮仅凭 `thread_id` 记忆回忆上一轮算出的 2146，算出 214600。
