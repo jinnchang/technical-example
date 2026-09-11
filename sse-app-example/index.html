@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SSE 构建进度</title>
+  <style>
+    body { font-family: system-ui, "Segoe UI", sans-serif; max-width: 40rem; margin: 2rem auto; padding: 0 1rem; }
+    #status { font-weight: 600; }
+    #status.ok  { color: #16a34a; }
+    #status.err { color: #dc2626; }
+    #track { width: 100%; height: 1.5rem; background: #e5e7eb; border-radius: .5rem; overflow: hidden; }
+    #fill  { height: 100%; width: 0; background: #2563eb; transition: width .3s; }
+    pre    { background: #0f172a; color: #e2e8f0; padding: 1rem; border-radius: .5rem; height: 16rem; overflow-y: auto; }
+  </style>
+</head>
+<body>
+  <h1>SSE 构建进度</h1>
+  <p>连接状态：<span id="status">connecting…</span></p>
+  <p>进度：<span id="percent">0</span>%</p>
+  <div id="track"><div id="fill"></div></div>
+  <pre id="log"></pre>
+
+  <script>
+    // 事件流客户端：浏览器原生 EventSource，自动建立长连接、
+    // 断线自动重连、并在重连时自动携带 Last-Event-ID 请求头。
+    const es = new EventSource("/events");
+
+    const statusEl  = document.getElementById("status");
+    const percentEl = document.getElementById("percent");
+    const fillEl    = document.getElementById("fill");
+    const logEl     = document.getElementById("log");
+
+    function log(line) {
+      logEl.textContent += line + "\n";
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    // 连接建立 / 断开：断开时 EventSource 会按服务器给的 retry 间隔自动重连。
+    es.onopen  = () => { statusEl.textContent = "已连接"; statusEl.className = "ok"; };
+    es.onerror = () => { statusEl.textContent = "连接中断，自动重连中…"; statusEl.className = "err"; };
+
+    // 默认事件（帧里没有 event: 行）走 onmessage
+    es.onmessage = (e) => log(`[message ] ${e.data}`);
+
+    // 命名事件：progress / notice（帧里有 event: 行），同名事件各配一个监听器。
+    es.addEventListener("progress", (e) => {
+      percentEl.textContent = e.data;
+      fillEl.style.width = e.data + "%";
+      log(`[progress] ${e.data}%  (id=${e.lastEventId})`);
+    });
+    es.addEventListener("notice", (e) => log(`[notice ] ${e.data}  (id=${e.lastEventId})`));
+  </script>
+</body>
+</html>
