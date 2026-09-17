@@ -1,25 +1,24 @@
 # technical-example
 
-一套自包含、可运行的技术示例集合——每个目录只教一门技术，并自带一篇 README。
+A collection of self-contained, runnable technical examples — each directory teaches one technology and ships with its own README.
 
-**中文** | [English](README.en.md)
+English | [中文](README.zh.md)
 
 ---
 
-## 这是什么
+## What this is
 
-每个目录都是一个独立、可运行的最小示例，单独讲授一门技术，目录名即技术名。
-示例之间不共享代码，只共享仓库根目录的虚拟环境。
+Each directory is an independent, minimal, runnable example teaching a single technology; the directory name is the technology name. Examples share no code, only the virtual environment at the repo root.
 
-## 目录约定
+## Directory conventions
 
-两类示例，靠目录后缀区分：
+Two kinds of examples, distinguished by directory suffix:
 
-- `{tech}-app-example` —— 「怎么用」：应用场景与流程；
-- `{tech}-principle-example` —— 「原理」：内部机制与实现。
+- `{tech}-app-example` — "how to use it": application scenario and workflow;
+- `{tech}-principle-example` — "how it works": internals and mechanisms.
 
-## 如何浏览
+## How to browse
 
-1. 看目录名找到感兴趣的技术；
-2. 进入该目录，读它的 README——安装与运行步骤都在里面；
-3. 没有统一的构建 / 测试系统，示例直接从各自目录运行。
+1. Find a technology you're interested in by directory name.
+2. Enter that directory and read its README — install and run instructions all live there.
+3. There is no unified build/test system; examples are run directly from their own directories.
